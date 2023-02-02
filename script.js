@@ -46,7 +46,12 @@ $("#search-button").on("click", function (event) {
             //today weather
             document.querySelector("#today").textContent = data.list[0].main.temp;
 
-
+            var temp = $("<div>");
+            var title = $("<h3>");
+            title.addClass("title");
+            title.text(data.city.name.title);
+            $(temp).append(title);
+            $("#today").append(temp);
 
             //forcast update
             renderForcast(data)
