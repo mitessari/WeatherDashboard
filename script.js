@@ -60,63 +60,57 @@ $("#search-input").val("");
 
 
 //search city name by input
-$("#search-button").on("click", function (event) {
-    event.preventDefault();
-    var cityFound = $("#search-input").val();
-    fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${cityFound}&limit=5&appid=${apiKey}`)
-        .then(response => response.json())
-        .then(cityFound => {
-            //first city variable 
-            let firstCity = cityFound[0];
+//$("#search-button").on("click", function (event) {
 
-            console.log(cityFound);
-            console.log(firstCity);
-        
-        //div to show the city name with their respectives temperatures
+    //event.preventDefault();
+ var currentWeather = function(cityName) {
+    //var cityFound = $("#search-input").val();
+    fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=5&appid=${apiKey}`)
+    .then(function(response) {
+        return response.json();
+    })
+    .then(function(response) {
+        // get city's longitude and latitude
+        var cityLon = response.coord.lon;
+        var cityLat = response.coord.lat; 
+     });
+    //div to show the city name with their respectives temperatures
+              return fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${cityLat}&lon=${cityLon}&appid=${apiKey}`)
+
             
-            //renderForcast(firstCity)
 
-            return fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${firstCity.lat}&lon=${firstCity.lon}&appid=79c2614c47312abd32270ca49ad0aabe`)
-
+            .then(function(response) {
+                return response.json();
+            })
+            // get data from response and apply them to the current weather section
+            .then(function(response){
+                searchHistoryList(cityName);
         
+                var currentWeatherContainer = $("#today");
+                currentWeatherContainer.addClass("current-weather-container");
 
+           
         //data comming from the cities temperature
 
-        .then(response => response.json())
-        .then(data => {
-
-            console.log(data);
-            renderForcast();
+      
             //   document.querySelector("#today").textContent = data.list[0].main.temp;
             //forcast update
-          
-       
-
-
-
-function renderForcast(){
-
-var cityTitle = $("<div>");
-            var title = $("<h3>");
+          var title = $("<h3>");
+          var currentDay = moment().format("M/D/YYYY");
             title.addClass("title");
-            title.text(firstCity.name);
+            title.text((`${cityName} (${currentDay}`));
+
             var cityTemp = $("<p>");
             cityTemp.addClass = $("ciyTemperature");
             cityTemp.text = $(data.list[0].main.temp);
  cityTitle.append(title, cityTemp);
 $("#today").append(cityTitle);
 // 
+})
+    
+
 }
 
-    renderForcast();
-
 //empty the div and recall the function
-       $("#today").empty();
-
-       renderForcast();
-
-
-})
- });
-
-});
+     
+        
