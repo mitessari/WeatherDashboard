@@ -43,7 +43,7 @@ function currentWeatherSection(cityName) {
  
     
     //div to show the city name with their respectives temperatures
-              fetch(`https://api.openweathermap.org/data/2.5/forecast?lon=44.5&lat=13.55&appid=79c2614c47312abd32270ca49ad0aabe`)
+              fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${cityLon}&lon=${cityLat}&appid=79c2614c47312abd32270ca49ad0aabe`)
  
            
 
