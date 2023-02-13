@@ -23,71 +23,78 @@
 
 // global variables
 var apiKey = "79c2614c47312abd32270ca49ad0aabe";
-var savedSearches = [];
 
-// function to list of past cities
-var searchHistoryList = function(cityName) {
-    $('.past-search:contains("' + cityName + '")').remove(); 
-//create p tag 
-var citySearch = $("<p>");
- citySearch.addClass = $("pastSearch");
- citySearch.text = $(cityName);
- 
-// container to append the entry text
-var cityContainer = $("<div>");
-cityContainer.addClass = $("past-search-container");
-cityContainer.append(citySearch);
-
-// append container to search history 
-$("#history").append(cityContainer);
-
-if (savedSearches.length > 0){
-    // update savedSearches array with previously saved searches
-    var previousSavedSearches = localStorage.getItem("savedSearches");
-    savedSearches = JSON.parse(previousSavedSearches);
-}
-
-// add city name to array of saved searches
-savedSearches.push(cityName);
-localStorage.setItem("savedSearches", JSON.stringify(savedSearches));
-
-// reset search input
-$("#search-input").val("");
-
-};
-
-
-
-
-//search city name by input
-//$("#search-button").on("click", function (event) {
-
-    //event.preventDefault();
- var currentWeather = function(cityName) {
-    //var cityFound = $("#search-input").val();
-    fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=5&appid=${apiKey}`)
-    .then(function(response) {
-        return response.json();
-    })
-    .then(function(response) {
-        // get city's longitude and latitude
-        var cityLon = response.coord.lon;
-        var cityLat = response.coord.lat; 
-     });
-    //div to show the city name with their respectives temperatures
-              return fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${cityLat}&lon=${cityLon}&appid=${apiKey}`)
-
-            
-
-            .then(function(response) {
-                return response.json();
-            })
-            // get data from response and apply them to the current weather section
-            .then(function(response){
-                searchHistoryList(cityName);
+function currentWeatherSection(cityName) {
+ fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=5&appid=79c2614c47312abd32270ca49ad0aabe`)
+    .then(response => response.json())
+    .then(function (response) {
+        console.log(response); 
+       var cityLon = response[0].lon;
+        var cityLat = response[0].lat;
+        console.log(cityLon);
+        console.log(cityLat);
+       
+    
+   
         
-                var currentWeatherContainer = $("#today");
-                currentWeatherContainer.addClass("current-weather-container");
+
+
+    
+ 
+    
+    //div to show the city name with their respectives temperatures
+              fetch(`https://api.openweathermap.org/data/2.5/forecast?lon=44.5&lat=13.55&appid=79c2614c47312abd32270ca49ad0aabe`)
+ 
+           
+
+            .then(response => response.json())
+            .then(data=> {
+ console.log(data)
+
+ let cityweather = document.querySelector("#today");
+ let currentDay = moment().format("M/D/YYYY");
+    let todaynews = `<div id="cardNews1" class="card latestNews1" style="width: 60rem;">
+    <div class="card-body">
+      <h1 class="card-title">${response[0].name} ${currentDay}</h1>
+      
+      <p class="card-text"><li>Temperature: ${data.list[0].main.temp + " \u00B0F"}</li></p>
+      <p class="card-text1"><li>Humidity: ${data.list[0].main.humidity}%</li></p>
+      <p class="card-text"><li>Wind: ${data.list[0].wind.speed}KPH</li></p>
+    </div>
+  </div>`
+   cityweather.innerHTML+=todaynews; 
+})
+})
+
+}
+   
+
+    
+
+
+
+      $("#search-button").on("click", function (event) {
+        event.preventDefault();
+            const cityName = $("#search-input").val();
+            if (cityName === "" || cityName == null) {
+                //send alert if search input is empty when submitted
+                alert("Please enter name of city.");
+               
+            } else {
+               // if cityName is valid, add it to search history list and display its weather conditions 
+                
+            
+                currentWeatherSection(cityName);
+                console.log(cityName);
+
+            }
+    
+   
+}) 
+
+     
+   
+                
 
            
         //data comming from the cities temperature
@@ -95,22 +102,28 @@ $("#search-input").val("");
       
             //   document.querySelector("#today").textContent = data.list[0].main.temp;
             //forcast update
-          var title = $("<h3>");
-          var currentDay = moment().format("M/D/YYYY");
-            title.addClass("title");
-            title.text((`${cityName} (${currentDay}`));
+//           var title = $("<h3>");
+//           var currentDay = moment().format("M/D/YYYY");
+//             title.addClass("title");
+//             title.text((`${cityName} (${currentDay}`));
 
-            var cityTemp = $("<p>");
-            cityTemp.addClass = $("ciyTemperature");
-            cityTemp.text = $(data.list[0].main.temp);
- cityTitle.append(title, cityTemp);
-$("#today").append(cityTitle);
-// 
-})
-    
+//             var cityTemp = $("<p>");
+//             cityTemp.addClass = $("ciyTemperature");
+//             cityTemp.text = $(response.list[0].main.temp);
+//  cityTitle.append(title, cityTemp);
+// $("#today").append(cityTitle);
+//adding the current weather to the page 
+// var currentTemperature = $("#today");
+// currentTemperature.text("Temperature: " + response.current.temp + " \u00B0F");
 
-}
+//});
+
+       
+// console.log(response);
+            
+
+
 
 //empty the div and recall the function
      
-        
+       
