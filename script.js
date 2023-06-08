@@ -73,7 +73,66 @@ function currentWeatherSection(cityName) {
 
 
 
-      $("#search-button").on("click", function (event) {
+      
+
+function fiveDayForecastSection(cityName) {
+  // get and use data from open weather current weather api end point
+  fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=5&appid=79c2614c47312abd32270ca49ad0aabe`)
+      // get response and turn it into objects
+      .then(function(response) {
+          return response.json();
+      })
+      .then(function(response) {
+          // get city's longitude and latitude
+          var cityLon = response[1].lon;
+          var cityLat = response[1].lat;
+
+          fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${cityLon}&lon=${cityLat}&appid=79c2614c47312abd32270ca49ad0aabe`)
+              // get response from one call api and turn it into objects
+              .then(function(response) {
+                  return response.json();
+              })
+              .then(function(response) {
+                  console.log(response);
+                 
+                  
+                
+
+                    // using data from response, set up each day of 5 day forecast
+                    for (var i = 1; i <= 5; i++) {
+console.log(response.list[i].main.temp);
+                       var futureDate = $(".card-title" + i);
+                        date = moment().add(i, "d").format("M/D/YYYY");
+                        futureDate.text(date);
+                        console.log(futureDate);
+
+                        var futureTemp = $(".card-text" + i);
+                        futureTemp.text("Temp: " + response.list[i].main.temp + " \u00B0F");
+
+                        // add humidity to 5 day forecast
+                        var futureHumidity = $(".card-text1" + i);
+                        futureHumidity.text("Humidity: " + response.list[i].main.humidity + "%");
+                        // add class to future cards to create card containers
+                      let fiveDaysContainer = $("#forecast");
+                  let fiveDaysForecast = `<div id="cardNews2" class="card latestNews2" style="width: 60rem;">
+    <div class="card-body">
+      <h1 class="card-title">${date}</h1>
+      
+      <p class="card-text"><li>Temp: ${response.list[i].main.temp}\u00B0F</li></p>
+      <p class="card-text1"><li>Humidity: ${futureHumidity.text()}</li></p>
+    </div>
+  </div>`
+   fiveDaysContainer.append(fiveDaysForecast); 
+
+                        // add date to 5 day forecast
+                       
+                    }
+                })
+        })
+};
+   
+                
+$("#search-button").on("click", function (event) {
         event.preventDefault();
             const cityName = $("#search-input").val();
             if (cityName === "" || cityName == null) {
@@ -85,17 +144,13 @@ function currentWeatherSection(cityName) {
                 
             
                 currentWeatherSection(cityName);
+                fiveDayForecastSection(cityName)
                 console.log(cityName);
 
             }
     
    
 }) 
-
-     
-   
-                
-
            
         //data comming from the cities temperature
 
